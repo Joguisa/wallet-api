@@ -6,11 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Movements\" />
-    <Folder Include="Shared\" />
-    <Folder Include="Transfers\" />
-    <Folder Include="Wallets\" />
-  </ItemGroup>
-
 </Project>
