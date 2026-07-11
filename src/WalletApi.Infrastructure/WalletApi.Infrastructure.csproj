@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Wallet.Application\Wallet.Application.csproj" />
-    <ProjectReference Include="..\Wallet.Domain\Wallet.Domain.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WalletApi.Application\WalletApi.Application.csproj" />
+    <ProjectReference Include="..\WalletApi.Domain\WalletApi.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

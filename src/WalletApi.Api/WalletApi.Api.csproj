@@ -11,15 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wallet.Application\Wallet.Application.csproj" />
-    <ProjectReference Include="..\Wallet.Infrastructure\Wallet.Infrastructure.csproj" />
+    <ProjectReference Include="..\WalletApi.Application\WalletApi.Application.csproj" />
+    <ProjectReference Include="..\WalletApi.Infrastructure\WalletApi.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Folder Include="Endpoints\" />
     <Folder Include="Middleware\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Contracts\" />
   </ItemGroup>
 
 </Project>
