@@ -26,3 +26,11 @@ public sealed class WalletNotFoundException : DomainException
     {
     }
 }
+
+public sealed class DuplicateDocumentIdException : DomainException
+{
+    public DuplicateDocumentIdException(string documentId)
+        : base("DUPLICATE_DOCUMENT_ID", $"A wallet for document id '{documentId}' already exists.")
+    {
+    }
+}

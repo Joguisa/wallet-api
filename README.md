@@ -44,7 +44,32 @@ To regenerate migrations, restore the local tools first: `dotnet tool restore`, 
 
 ## API endpoints
 
-_TBD_
+| Method | Route | Description |
+|---|---|---|
+| POST | `/api/wallets` | Creates a wallet. Returns 201 with a Location header |
+| GET | `/api/wallets/{id}` | Gets a wallet by id |
+
+Errors follow [RFC 7807 ProblemDetails](https://datatracker.ietf.org/doc/html/rfc7807) with an `errorCode` extension, e.g.:
+
+```json
+{
+  "title": "Business rule violated",
+  "status": 422,
+  "detail": "Wallet 1 has balance 50.00, debit of 75.00 was rejected.",
+  "errorCode": "INSUFFICIENT_FUNDS",
+  "traceId": "..."
+}
+```
+
+Sample requests for every endpoint live in [`src/WalletApi.Api/WalletApi.Api.http`](src/WalletApi.Api/WalletApi.Api.http).
+
+## Design decisions
+
+- **Minimal APIs + Vertical Slice Architecture:** Endpoints only handle HTTP concerns, while business logic lives in application handlers.
+- **No MediatR:** Use cases implement a lightweight `IRequestHandler<TRequest, TResponse>` abstraction resolved from DI. This keeps the architecture simple while preserving an easy migration path to MediatR if needed.
+- **Lean domain model:** Wallets are USD-only, so `Money` does not model a currency. `Movement` is kept outside the `Wallet` aggregate to avoid loading transaction history for balance updates, while `Transfer` models the business event and idempotency by linking the debit and credit movements.
+- **Centralized error handling:** Typed `DomainException`s are translated into RFC 7807 responses through a single `IExceptionHandler`.
+- **Defense in depth:** Balance integrity is enforced through domain rules, optimistic concurrency (`RowVersion`), and a database `CHECK` constraint.
 
 ## Deliberate omissions
 

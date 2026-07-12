@@ -19,10 +19,4 @@
     <ProjectReference Include="..\WalletApi.Infrastructure\WalletApi.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Endpoints\" />
-    <Folder Include="Middleware\" />
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>

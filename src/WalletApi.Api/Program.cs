@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using WalletApi.Api.Endpoints;
+using WalletApi.Api.Middleware;
 using WalletApi.Application;
 using WalletApi.Infrastructure;
 using WalletApi.Infrastructure.Persistence;
@@ -12,7 +14,12 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
@@ -26,5 +33,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapWalletEndpoints();
 
 app.Run();
