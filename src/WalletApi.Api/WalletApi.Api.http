@@ -1,7 +1,29 @@
 @host = http://localhost:5031
 
-### Create a wallet
+### 1. Login first (demo credentials from appsettings.Development.json),
+###    then paste the accessToken into the @token variable below.
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin_Dev123!"
+}
+
+### Wrong credentials -> 401 (generic message)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "wrong"
+}
+
+@token = PASTE_ACCESS_TOKEN_HERE
+
+### Create a wallet (requires auth)
 POST {{host}}/api/wallets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -12,6 +34,7 @@ Content-Type: application/json
 
 ### Create a second wallet (transfer destination)
 POST {{host}}/api/wallets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -22,12 +45,15 @@ Content-Type: application/json
 
 ### Get a wallet
 GET {{host}}/api/wallets/1
+Authorization: Bearer {{token}}
 
 ### Get a wallet that does not exist -> 404
 GET {{host}}/api/wallets/9999
+Authorization: Bearer {{token}}
 
 ### Invalid payload -> 400 with field errors
 POST {{host}}/api/wallets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -38,6 +64,7 @@ Content-Type: application/json
 
 ### Duplicate document id -> 409
 POST {{host}}/api/wallets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -48,6 +75,7 @@ Content-Type: application/json
 
 ### Transfer balance (atomic debit + credit)
 POST {{host}}/api/transfers
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Idempotency-Key: 7f0f9a3e-5b1c-4a2d-9e8f-1a2b3c4d5e6f
 
@@ -59,6 +87,7 @@ Idempotency-Key: 7f0f9a3e-5b1c-4a2d-9e8f-1a2b3c4d5e6f
 
 ### Repeat the SAME request (same key) -> 200 with the original transfer, no double spend
 POST {{host}}/api/transfers
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Idempotency-Key: 7f0f9a3e-5b1c-4a2d-9e8f-1a2b3c4d5e6f
 
@@ -70,6 +99,7 @@ Idempotency-Key: 7f0f9a3e-5b1c-4a2d-9e8f-1a2b3c4d5e6f
 
 ### Insufficient funds -> 422
 POST {{host}}/api/transfers
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Idempotency-Key: {{$guid}}
 
@@ -81,6 +111,7 @@ Idempotency-Key: {{$guid}}
 
 ### Destination wallet does not exist -> 404
 POST {{host}}/api/transfers
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Idempotency-Key: {{$guid}}
 
@@ -92,6 +123,7 @@ Idempotency-Key: {{$guid}}
 
 ### Missing Idempotency-Key header -> 400
 POST {{host}}/api/transfers
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -102,6 +134,7 @@ Content-Type: application/json
 
 ### Self transfer -> 400
 POST {{host}}/api/transfers
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Idempotency-Key: {{$guid}}
 
@@ -111,7 +144,17 @@ Idempotency-Key: {{$guid}}
   "amount": 1.00
 }
 
-### Movement history (public endpoint, newest first)
+### Request WITHOUT token -> 401
+POST {{host}}/api/wallets
+Content-Type: application/json
+
+{
+  "documentId": "0999999999",
+  "ownerName": "No Token",
+  "initialBalance": 0
+}
+
+### Movement history (public endpoint — no token required, newest first)
 GET {{host}}/api/wallets/1/movements
 
 ### Movement history with pagination

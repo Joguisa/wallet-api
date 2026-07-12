@@ -44,12 +44,24 @@ To regenerate migrations, restore the local tools first: `dotnet tool restore`, 
 
 ## API endpoints
 
-| Method | Route | Description |
-|---|---|---|
-| POST | `/api/wallets` | Creates a wallet. Returns 201 with a Location header |
-| GET | `/api/wallets/{id}` | Gets a wallet by id |
-| POST | `/api/transfers` | Transfers balance between wallets (atomic debit + credit). Requires an `Idempotency-Key` header (GUID); repeating a request with the same key returns the original transfer without executing again |
-| GET | `/api/wallets/{walletId}/movements?page=1&pageSize=20` | Paginated movement history, newest first (`pageSize` ≤ 100) |
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| POST | `/api/auth/login` | Public | Authenticates the demo user and returns a JWT |
+| POST | `/api/wallets` | Bearer | Creates a wallet. Returns 201 with a Location header |
+| GET | `/api/wallets/{id}` | Bearer | Gets a wallet by id |
+| POST | `/api/transfers` | Bearer | Transfers balance between wallets (atomic debit + credit). Requires an `Idempotency-Key` header (GUID); repeating a request with the same key returns the original transfer without executing again |
+| GET | `/api/wallets/{walletId}/movements?page=1&pageSize=20` | Public | Paginated movement history, newest first (`pageSize` ≤ 100). Per the requirements, this is the only endpoint available without authentication |
+
+### Authentication
+
+Log in with the demo user (configured in `appsettings.Development.json`) and send the returned token as `Authorization: Bearer <token>`:
+
+```json
+POST /api/auth/login
+{ "username": "admin", "password": "Admin_Dev123!" }
+```
+
+In Swagger UI, use the **Authorize** button and paste the access token.
 
 Errors follow [RFC 7807 ProblemDetails](https://datatracker.ietf.org/doc/html/rfc7807) with an `errorCode` extension, e.g.:
 
@@ -72,7 +84,3 @@ Sample requests for every endpoint live in [`src/WalletApi.Api/WalletApi.Api.htt
 - **Lean domain model:** Wallets are USD-only, so `Money` does not model a currency. `Movement` is kept outside the `Wallet` aggregate to avoid loading transaction history for balance updates, while `Transfer` models the business event and idempotency by linking the debit and credit movements.
 - **Centralized error handling:** Typed `DomainException`s are translated into RFC 7807 responses through a single `IExceptionHandler`.
 - **Defense in depth:** Balance integrity is enforced through domain rules, optimistic concurrency (`RowVersion`), and a database `CHECK` constraint.
-
-## Deliberate omissions
-
-_TBD — documented as phases are completed._

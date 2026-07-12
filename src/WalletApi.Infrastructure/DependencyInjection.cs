@@ -5,6 +5,7 @@ using WalletApi.Application.Abstractions;
 using WalletApi.Application.Movements.GetHistory;
 using WalletApi.Domain.Transfers;
 using WalletApi.Domain.Wallets;
+using WalletApi.Infrastructure.Authentication;
 using WalletApi.Infrastructure.Persistence;
 using WalletApi.Infrastructure.Persistence.Repositories;
 
@@ -23,6 +24,11 @@ public static class DependencyInjection
         services.AddScoped<IWalletRepository, WalletRepository>();
         services.AddScoped<ITransferRepository, TransferRepository>();
         services.AddScoped<IMovementQueries, MovementQueries>();
+
+        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+        services.Configure<DemoUserOptions>(configuration.GetSection(DemoUserOptions.SectionName));
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<ICredentialVerifier, CredentialVerifier>();
 
         return services;
     }

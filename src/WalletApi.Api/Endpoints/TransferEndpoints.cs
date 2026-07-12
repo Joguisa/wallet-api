@@ -9,7 +9,9 @@ public static class TransferEndpoints
 {
     public static void MapTransferEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/transfers").WithTags("Transfers");
+        var group = app.MapGroup("/api/transfers")
+            .WithTags("Transfers")
+            .RequireAuthorization();
 
         group.MapPost("/", Transfer)
             .WithSummary("Transfers balance between wallets (atomic debit + credit)")

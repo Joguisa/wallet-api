@@ -75,6 +75,7 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
     {
         var status = exception.ErrorCode switch
         {
+            "INVALID_CREDENTIALS" => StatusCodes.Status401Unauthorized,
             "WALLET_NOT_FOUND" => StatusCodes.Status404NotFound,
             "DUPLICATE_DOCUMENT_ID" => StatusCodes.Status409Conflict,
             "INSUFFICIENT_FUNDS" => StatusCodes.Status422UnprocessableEntity,
@@ -84,6 +85,7 @@ internal sealed class GlobalExceptionHandler : IExceptionHandler
 
         var title = status switch
         {
+            StatusCodes.Status401Unauthorized => "Unauthorized",
             StatusCodes.Status404NotFound => "Resource not found",
             StatusCodes.Status409Conflict => "Conflict",
             StatusCodes.Status422UnprocessableEntity => "Business rule violated",
