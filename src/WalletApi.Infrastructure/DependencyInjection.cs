@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WalletApi.Application.Abstractions;
+using WalletApi.Application.Movements.GetHistory;
 using WalletApi.Domain.Transfers;
 using WalletApi.Domain.Wallets;
 using WalletApi.Infrastructure.Persistence;
@@ -21,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<WalletDbContext>());
         services.AddScoped<IWalletRepository, WalletRepository>();
         services.AddScoped<ITransferRepository, TransferRepository>();
+        services.AddScoped<IMovementQueries, MovementQueries>();
 
         return services;
     }

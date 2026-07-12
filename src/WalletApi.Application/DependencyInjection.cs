@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using WalletApi.Application.Abstractions;
+using WalletApi.Application.Movements.GetHistory;
 using WalletApi.Application.Transfers;
 using WalletApi.Application.Transfers.Create;
 using WalletApi.Application.Wallets;
@@ -21,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<IRequestHandler<CreateWalletCommand, WalletResponse>, CreateWalletHandler>();
         services.AddScoped<IRequestHandler<GetWalletQuery, WalletResponse>, GetWalletHandler>();
         services.AddScoped<IRequestHandler<TransferCommand, TransferResponse>, TransferHandler>();
+        services.AddScoped<IRequestHandler<GetMovementHistoryQuery, MovementHistoryResponse>, GetMovementHistoryHandler>();
 
         return services;
     }

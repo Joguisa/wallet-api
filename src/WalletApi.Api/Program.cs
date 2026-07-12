@@ -36,5 +36,6 @@ app.UseHttpsRedirection();
 
 app.MapWalletEndpoints();
 app.MapTransferEndpoints();
+app.MapMovementEndpoints();
 
 app.Run();

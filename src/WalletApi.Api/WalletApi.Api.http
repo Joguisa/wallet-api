@@ -110,3 +110,15 @@ Idempotency-Key: {{$guid}}
   "destinationWalletId": 1,
   "amount": 1.00
 }
+
+### Movement history (public endpoint, newest first)
+GET {{host}}/api/wallets/1/movements
+
+### Movement history with pagination
+GET {{host}}/api/wallets/1/movements?page=1&pageSize=5
+
+### Movement history of a wallet that does not exist -> 404
+GET {{host}}/api/wallets/9999/movements
+
+### Page size above the maximum -> 400
+GET {{host}}/api/wallets/1/movements?pageSize=101
