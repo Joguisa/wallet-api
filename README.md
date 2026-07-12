@@ -9,6 +9,7 @@ REST API for managing wallets and balance transfers, built with .NET 8, Clean Ar
 - .NET 8 (Minimal APIs)
 - Entity Framework Core + SQL Server
 - xUnit, FluentAssertions, NSubstitute (unit tests)
+- Testcontainers + WebApplicationFactory (integration tests against a real SQL Server)
 - JWT Bearer authentication
 
 ## Solution structure
@@ -39,6 +40,14 @@ dotnet run --project src/WalletApi.Api
 Swagger UI is available at the URL printed in the console (`/swagger`).
 
 To regenerate migrations, restore the local tools first: `dotnet tool restore`, then use `dotnet ef`.
+
+### Running the tests
+
+```bash
+dotnet test
+```
+
+Unit tests run in-memory. Integration tests spin up their own disposable SQL Server via Testcontainers (Docker must be running) and exercise the real HTTP pipeline — including a parallel-transfers test that proves balances never go negative and money is conserved under concurrency.
 
 > The SQL Server password in `docker-compose.yml` and `appsettings.Development.json` is for local development only; production would use a secret store and run migrations as a deployment step.
 

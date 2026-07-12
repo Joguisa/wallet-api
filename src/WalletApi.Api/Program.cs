@@ -93,3 +93,5 @@ app.MapTransferEndpoints();
 app.MapMovementEndpoints();
 
 app.Run();
+
+public partial class Program;
