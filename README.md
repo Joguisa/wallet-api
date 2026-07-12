@@ -48,6 +48,7 @@ To regenerate migrations, restore the local tools first: `dotnet tool restore`, 
 |---|---|---|
 | POST | `/api/wallets` | Creates a wallet. Returns 201 with a Location header |
 | GET | `/api/wallets/{id}` | Gets a wallet by id |
+| POST | `/api/transfers` | Transfers balance between wallets (atomic debit + credit). Requires an `Idempotency-Key` header (GUID); repeating a request with the same key returns the original transfer without executing again |
 
 Errors follow [RFC 7807 ProblemDetails](https://datatracker.ietf.org/doc/html/rfc7807) with an `errorCode` extension, e.g.:
 

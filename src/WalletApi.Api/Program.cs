@@ -35,5 +35,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapWalletEndpoints();
+app.MapTransferEndpoints();
 
 app.Run();

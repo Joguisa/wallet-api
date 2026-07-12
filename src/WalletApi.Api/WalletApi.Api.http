@@ -45,3 +45,68 @@ Content-Type: application/json
   "ownerName": "Someone Else",
   "initialBalance": 0
 }
+
+### Transfer balance (atomic debit + credit)
+POST {{host}}/api/transfers
+Content-Type: application/json
+Idempotency-Key: 7f0f9a3e-5b1c-4a2d-9e8f-1a2b3c4d5e6f
+
+{
+  "sourceWalletId": 1,
+  "destinationWalletId": 2,
+  "amount": 30.00
+}
+
+### Repeat the SAME request (same key) -> 200 with the original transfer, no double spend
+POST {{host}}/api/transfers
+Content-Type: application/json
+Idempotency-Key: 7f0f9a3e-5b1c-4a2d-9e8f-1a2b3c4d5e6f
+
+{
+  "sourceWalletId": 1,
+  "destinationWalletId": 2,
+  "amount": 30.00
+}
+
+### Insufficient funds -> 422
+POST {{host}}/api/transfers
+Content-Type: application/json
+Idempotency-Key: {{$guid}}
+
+{
+  "sourceWalletId": 1,
+  "destinationWalletId": 2,
+  "amount": 999999.00
+}
+
+### Destination wallet does not exist -> 404
+POST {{host}}/api/transfers
+Content-Type: application/json
+Idempotency-Key: {{$guid}}
+
+{
+  "sourceWalletId": 1,
+  "destinationWalletId": 9999,
+  "amount": 1.00
+}
+
+### Missing Idempotency-Key header -> 400
+POST {{host}}/api/transfers
+Content-Type: application/json
+
+{
+  "sourceWalletId": 1,
+  "destinationWalletId": 2,
+  "amount": 1.00
+}
+
+### Self transfer -> 400
+POST {{host}}/api/transfers
+Content-Type: application/json
+Idempotency-Key: {{$guid}}
+
+{
+  "sourceWalletId": 1,
+  "destinationWalletId": 1,
+  "amount": 1.00
+}
