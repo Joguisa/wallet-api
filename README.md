@@ -26,7 +26,21 @@ tests/
 
 ## Getting started
 
-_TBD — docker-compose and setup instructions will be added with the persistence phase._
+Prerequisites: .NET 8 SDK and Docker.
+
+```bash
+# 1. Start SQL Server (waits until healthy)
+docker compose up -d
+
+# 2. Run the API — applies EF Core migrations automatically in Development
+dotnet run --project src/WalletApi.Api
+```
+
+Swagger UI is available at the URL printed in the console (`/swagger`).
+
+To regenerate migrations, restore the local tools first: `dotnet tool restore`, then use `dotnet ef`.
+
+> The SQL Server password in `docker-compose.yml` and `appsettings.Development.json` is for local development only; production would use a secret store and run migrations as a deployment step.
 
 ## API endpoints
 
